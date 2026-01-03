@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include __DIR__ . '/db_connect.php';
 session_start();
@@ -8,7 +8,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     exit();
 }
 
-$stmt = $const->prepare("SELECT t1.* FROM shop AS t1 JOIN users AS t2 ON t1.shop_id = t2.user_id WHERE user_id = ?");
+$stmt = $const->prepare("SELECT t1.*, t2.user_description FROM shop AS t1 JOIN users AS t2 ON t1.shop_id = t2.user_id WHERE user_id = ?");
 $stmt->bind_param("i", $_SESSION["user_id"]);
 $stmt->execute();
 $shop = $stmt->get_result()->fetch_assoc();
@@ -33,7 +33,11 @@ $defImg = 'profile_img/default.jpg' ?>
                 <li><a href="Homepage.php" class="active">Homepage</a></li>
                 <li><a href="Homepage.php#categories">Categories</a></li>
                 <li><a href="saved_books.php">Saved Books</a></li>
-                <li><a href="profile.php">Profile</a></li> <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?> <li><a href="signout.php">Logout</a></li> <?php endif; ?>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="Settings.php">Settings</a></li>
+                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                    <li><a href="signout.php">Logout</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
@@ -41,25 +45,39 @@ $defImg = 'profile_img/default.jpg' ?>
         <h2>About eLibrary & The Owner</h2>
         <section class="owner-info">
             <div class="owner-details" id="profile-view">
-                <h3>Meet the Founder, <?php echo htmlspecialchars($shop['shop_owner']) ?></h3>
-                <p> <?php echo htmlspecialchars($shop['shop_history']) ?></p>
-                </p>
+                <h3><?php echo htmlspecialchars($shop['shop_owner']) ?></h3>
+                <h2>About Me</h2>
+                <h3><?php echo htmlspecialchars($shop['user_description']) ?></h3>
             </div>
-            <div class="owner-details" id="profile-edit" style="display:none;"> <input type="text" id="edit-owner" value="<?php echo htmlspecialchars($shop['shop_owner']); ?>">
-                <p> <textarea id="edit-history"><?php echo htmlspecialchars($shop['shop_history']); ?></textarea> </p>
+
+            <div class="owner-details" id="profile-edit" style="display:none;">
+                <input type="text" id="edit-owner" value="<?php echo htmlspecialchars($shop['shop_owner']); ?>">
             </div>
-            <div class="owner-image-box"> <img src="<?php echo htmlspecialchars($shop['shop_img_path']) || $defImg ?>" alt="<?php echo htmlspecialchars($shop['shop_owner']) ?>-image" id="profileImg" class="owner-image"> <input type="file" id="imgInput" accept="image/*" style="display:none;"> </div>
+            <div class="owner-image-box"> <img src="<?php echo htmlspecialchars($shop['shop_img_path']) || $defImg ?>"
+                    alt="<?php echo htmlspecialchars($shop['shop_owner']) ?>-image" id="profileImg" class="owner-image">
+                <input type="file" id="imgInput" accept="image/*" style="display:none;"> </div>
         </section>
+
         <section class="shop-background">
+            <h3>Our History</h3>
+            <p id="history-view"> <?php echo htmlspecialchars($shop['shop_history']) ?></p>
+            <p style="display:none;" id="history-edit"> <textarea
+                    id="edit-history"><?php echo htmlspecialchars($shop['shop_history']); ?></textarea> </p>
             <h3>Our Vision</h3>
-            <p id="view-vision"><?php echo htmlspecialchars($shop['shop_vision']) ?></p> <textarea id="edit-vision" style="display:none;"><?php echo htmlspecialchars($shop['shop_vision']); ?></textarea>
+            <p id="view-vision"><?php echo htmlspecialchars($shop['shop_vision']) ?></p> <textarea id="edit-vision"
+                style="display:none;"><?php echo htmlspecialchars($shop['shop_vision']); ?></textarea>
             <h3>Our Mission</h3>
-            <p id="view-mission"><?php echo htmlspecialchars($shop['shop_mission']) ?></p> <textarea id="edit-mission" style="display:none;"><?php echo htmlspecialchars($shop['shop_mission']); ?></textarea>
-            <div class="util"> <?php if ($_SESSION['user_id'] == $_SESSION['user_id']): ?> <button id="changeImgBtn" style="display:none;">Change Image</button> <button id="editProfileBtn">Edit Profile</button> <button id="saveProfileBtn" style="display:none;">Save Profile</button> <?php endif; ?> </div>
+            <p id="view-mission"><?php echo htmlspecialchars($shop['shop_mission']) ?></p> <textarea id="edit-mission"
+                style="display:none;"><?php echo htmlspecialchars($shop['shop_mission']); ?></textarea>
+            <div class="util"> <?php if ($_SESSION['user_id'] == $_SESSION['user_id']): ?> <button id="changeImgBtn"
+                        style="display:none;">Change Image</button> <button id="editProfileBtn">Edit Profile</button>
+                    <button id="saveProfileBtn" style="display:none;">Save Profile</button> <?php endif; ?> </div>
         </section>
+
         <section class="customer-feedback">
             <h2>Customer Feedback</h2>
-            <div class="feedback-form"> <textarea id="feedback-message" placeholder="Write your feedback..." required></textarea> <select id="feedback-rating">
+            <div class="feedback-form"> <textarea id="feedback-message" placeholder="Write your feedback..."
+                    required></textarea> <select id="feedback-rating">
                     <option value="5">★★★★★</option>
                     <option value="4">★★★★☆</option>
                     <option value="3">★★★☆☆</option>
@@ -69,16 +87,20 @@ $defImg = 'profile_img/default.jpg' ?>
             <h3>What Our Readers Say</h3>
             <div class="testimonial-list" id="testimonial-list">
                 <blockquote class="testimonial-card">
-                    <p>"eLibrary made finding niche local history books so easy. The design is clean and navigation is fast. Highly recommend!"</p> <cite>— Lat B.</cite>
+                    <p>"eLibrary made finding niche local history books so easy. The design is clean and navigation is
+                        fast. Highly recommend!"</p> <cite>— Lat B.</cite>
                 </blockquote>
                 <blockquote class="testimonial-card">
-                    <p>"The 'Save Book' feature is perfect for my reading list. Great service and excellent collection variety."</p> <cite>— Nilo B.</cite>
+                    <p>"The 'Save Book' feature is perfect for my reading list. Great service and excellent collection
+                        variety."</p> <cite>— Nilo B.</cite>
                 </blockquote>
                 <blockquote class="testimonial-card">
-                    <p>"Reliable platform with fair prices. I appreciate their dedication to supporting Filipino authors."</p> <cite>— Nur Wa Lid P.</cite>
+                    <p>"Reliable platform with fair prices. I appreciate their dedication to supporting Filipino
+                        authors."</p> <cite>— Nur Wa Lid P.</cite>
                 </blockquote>
                 <blockquote class="testimonial-card">
-                    <p>"Reliable platform with fair prices. I appreciate their dedication to supporting Filipino authors."</p> <cite>— Nur Wa Lid P.</cite>
+                    <p>"Reliable platform with fair prices. I appreciate their dedication to supporting Filipino
+                        authors."</p> <cite>— Nur Wa Lid P.</cite>
                 </blockquote>
             </div>
         </section>
@@ -86,10 +108,13 @@ $defImg = 'profile_img/default.jpg' ?>
     <footer>
         <p>&copy; 2025 eLibrary. All rights reserved.</p>
     </footer>
-    <div id="notif" style=" display:none; position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:12px 18px; border-radius:10px; z-index:1000; font-size:14px;"> </div>
+    <div id="notif"
+        style=" display:none; position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:12px 18px; border-radius:10px; z-index:1000; font-size:14px;">
+    </div>
     <div id="confirmModal" class="modal" style="display: none;">
         <div class="modal-box">
-            <p id="confirmMessage">Are you sure?</p> <button id="confirmYes">Yes</button> <button id="confirmNo">No</button>
+            <p id="confirmMessage">Are you sure?</p> <button id="confirmYes">Yes</button> <button
+                id="confirmNo">No</button>
         </div>
     </div>
     <script>
@@ -168,9 +193,9 @@ $defImg = 'profile_img/default.jpg' ?>
                     <div class="edit-box" style="display:none;">
                         <textarea>${f.feedback_message}</textarea>
                         <select>
-                            ${[5,4,3,2,1].map(r => 
-                                `<option value="${r}" ${r == f.feedback_rating ? 'selected' : ''}>${"★".repeat(r)}</option>`
-                            ).join("")}
+                            ${[5, 4, 3, 2, 1].map(r =>
+                    `<option value="${r}" ${r == f.feedback_rating ? 'selected' : ''}>${"★".repeat(r)}</option>`
+                ).join("")}
                         </select>
                         <button class="save-btn">Save</button>
                         <button class="del-btn">Delete</button>
@@ -284,6 +309,8 @@ $defImg = 'profile_img/default.jpg' ?>
         editBtn.onclick = () => {
             document.getElementById("profile-view").style.display = "none";
             document.getElementById("profile-edit").style.display = "block";
+            document.getElementById("history-view").style.display = "none";
+            document.getElementById("history-edit").style.display = "block";
             document.getElementById("view-vision").style.display = "none";
             document.getElementById("view-mission").style.display = "none";
             document.getElementById("edit-vision").style.display = "block";
@@ -311,6 +338,7 @@ $defImg = 'profile_img/default.jpg' ?>
                 method: "POST",
                 body: formData
             });
+
             const data = await res.json();
 
             if (!data.success) {
@@ -318,15 +346,17 @@ $defImg = 'profile_img/default.jpg' ?>
                 return;
             }
 
-            document.querySelector("#profile-view h3").textContent = `Meet the Founder, ${data.owner}`;
-            document.querySelector("#profile-view p").textContent = data.history;
-            document.getElementById("view-vision").textContent = data.vision;
-            document.getElementById("view-mission").textContent = data.mission;
+            document.querySelector("#profile-view h3").textContent = `${data.info.shop_owner}`;
+            document.querySelector("#history-view").textContent = data.info.shop_history;
+            document.getElementById("view-vision").textContent = data.info.shop_vision;
+            document.getElementById("view-mission").textContent = data.info.shop_mission;
 
-            if (data.img_path) profileImg.src = data.img_path;
+            if (data.img_path) profileImg.src = data.info.img_path;
 
             document.getElementById("profile-view").style.display = "block";
             document.getElementById("profile-edit").style.display = "none";
+            document.getElementById("history-view").style.display = "block";
+            document.getElementById("history-edit").style.display = "none";
             document.getElementById("view-vision").style.display = "block";
             document.getElementById("view-mission").style.display = "block";
             document.getElementById("edit-vision").style.display = "none";

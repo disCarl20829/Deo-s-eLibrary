@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $dbuser = "root";
-$dbpass = "";
+$dbpass = "123456";
 $db = "elibrary";
 
 $const = new mysqli($host, $dbuser, $dbpass, $db);

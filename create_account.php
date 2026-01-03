@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $user_name = $_POST['username'];
     $user_pass = $_POST['password'];
+    $user_desc = $_POST['description'];
 
     $stmt = $const->prepare("SELECT * FROM users WHERE user_name = ? OR user_email = ?");
     $stmt->bind_param("ss", $user_name, $email);
@@ -22,8 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $hashed_pass = password_hash($user_pass, PASSWORD_BCRYPT);
 
-        $stmt = $const->prepare("INSERT INTO users (user_email, user_name, user_password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $email, $user_name, $hashed_pass);
+        $stmt = $const->prepare("INSERT INTO users (user_email, user_name, user_password, user_description) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $email, $user_name, $hashed_pass, $user_desc);
 
         $stmt2 = $const->prepare("INSERT INTO shop (shop_owner) VALUES (?)");
 
@@ -72,12 +73,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="form-group">
                     <label for="reg-password">Password:</label>
-                    <input type="password" id="reg-password" name="password" placeholder="Choose a secure password" required>
+                    <input type="password" id="reg-password" name="password" placeholder="Choose a secure password"
+                        required>
                 </div>
 
                 <div class="form-group">
                     <label for="reg-confirm-password">Confirm Password:</label>
-                    <input type="password" id="reg-confirm-password" name="confirm_password" placeholder="Re-enter your password" required>
+                    <input type="password" id="reg-confirm-password" name="confirm_password"
+                        placeholder="Re-enter your password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-description">Description</label>
+                    <textarea id="reg-description" name="description" placeholder="About me"></textarea>
                 </div>
 
                 <button type="submit" class="submit-button" id="submit">Create Account</button>
@@ -94,7 +102,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>&copy; 2025 eLibrary. All rights reserved.</p>
     </footer>
 
-    <div id="notif" style=" display:none; position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:12px 18px; border-radius:10px; z-index:1000; font-size:14px;"> </div>
+    <div id="notif"
+        style=" display:none; position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:12px 18px; border-radius:10px; z-index:1000; font-size:14px;">
+    </div>
 
     <script>
         const form = document.querySelector(".auth-form");
@@ -111,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }, 2000);
         }
 
-        form.addEventListener("submit", function(e) {
+        form.addEventListener("submit", function (e) {
             if (password.value !== confirmPassword.value) {
                 e.preventDefault();
                 showNotif("Passwords do not match!");
@@ -120,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         })
 
-        confirmPassword.addEventListener("input", function() {
+        confirmPassword.addEventListener("input", function () {
             if (password.value !== confirmPassword.value) {
                 confirmPassword.style.borderColor = "red";
             } else {

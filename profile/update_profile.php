@@ -68,4 +68,11 @@ if ($imgPath) {
 
 $stmt->execute();
 
-echo json_encode(["success" => true]);
+$shop = $const->prepare("SELECT t1.*, t2.user_description FROM shop AS t1 JOIN users AS t2 ON t1.shop_id = t2.user_id WHERE user_id = ?");
+$shop->bind_param("i", $_SESSION["user_id"]);
+$shop->execute();
+$shopResult = $shop->get_result()->fetch_assoc();
+
+$defImg = 'profile_img/default.jpg';
+
+echo json_encode(["success" => true, "info" => $shopResult]);

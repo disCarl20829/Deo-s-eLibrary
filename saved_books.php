@@ -47,6 +47,7 @@ if ($result) {
                 <li><a href="Homepage.php#categories">Categories</a></li>
                 <li><a href="saved_books.php">Saved Books</a></li>
                 <li><a href="profile.php">Profile</a></li>
+                <li><a href="Settings.php">Settings</a></li>
                 <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
                     <li><a href="signout.php">Logout</a></li>
                 <?php endif; ?>
