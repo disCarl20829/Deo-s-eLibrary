@@ -1,6 +1,6 @@
 **--//MYSQL DATABASE\\--**
 Match your database and tables exactly.
-
+&nbsp;
 _[book_category]_
 category_id (not pri key/auto inc)
 book_id
