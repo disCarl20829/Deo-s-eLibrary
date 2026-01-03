@@ -1,47 +1,47 @@
-**--//MYSQL DATABASE\\--**
-Match your database and tables exactly.
-&nbsp;
-_[book_category]_
-category_id (not pri key/auto inc)
-book_id
-
-_[customer_feedbacks]_
-feedback_id (pri key)
-user_id
-feedback_message
-feedback_rating
-feedback_date
-
-_[save_books]_
-saved_id (pri key)
-user_id
-book_id
-save_quantity
-
-_[shop]_
-shop_id (pri key)
-shop_owner
-shop_history
-shop_mission
-shop_vision
-shop_img_path
-
-_[users]_
-user_id
-user_name
-user_password
-user_description (redacted)
-
-_[books]_
-book_id
-book_title
-book_author
-book_pubdate
-book_description
-book_price
-book_img_path
-
-**--//END\\--**
-
-- You must copy all files including folders for the images
-- Modify the **$db** of your **db_connect** with the exact database name (e.g mine was $db = "elibrary")
+**--//MYSQL DATABASE\\--**<br>
+Match your database and tables exactly.<br>
+<br>
+_[book_category]_<br>
+category_id (not pri key/auto inc) <br>
+book_id <br>
+<br>
+_[customer_feedbacks]_<br>
+feedback_id (pri key)<br>
+user_id<br>
+feedback_message<br>
+feedback_rating<br>
+feedback_date<br>
+<br>
+_[save_books]_<br>
+saved_id (pri key)<br>
+user_id<br>
+book_id<br>
+save_quantity<br>
+<br>
+_[shop]_<br>
+shop_id (pri key)<br>
+shop_owner<br>
+shop_history<br>
+shop_mission<br>
+shop_vision<br>
+shop_img_path<br>
+<br>
+_[users]_<br>
+user_id<br>
+user_name<br>
+user_password<br>
+user_description (redacted)<br>
+<br>
+_[books]_<br>
+book_id<br>
+book_title<br>
+book_author<br>
+book_pubdate<br>
+book_description<br>
+book_price<br>
+book_img_path<br>
+<br>
+**--//END\\--**<br>
+<br>
+- You must copy all files including folders for the images<br>
+- Modify the **$db** of your **db_connect** with the exact database name (e.g mine was $db = "elibrary")<br>
